@@ -4,7 +4,7 @@ This Python script downloads the top images from a subreddit and automatically d
 
 ## How to use
 ### 1. Get Client ID and Secret from Reddit
-TODO
+See https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example#first-steps
 
 ### 2. Create required_info.py
 Create a file `required_info.py` and open it in your favorite text editor
