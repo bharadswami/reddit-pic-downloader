@@ -5,6 +5,7 @@ import os
 import logging
 import requests
 import praw
+from urllib3.exceptions import NewConnectionError
 from required_info import *
 
 logging.basicConfig(filename=LOG_FILE_NAME,
@@ -17,7 +18,7 @@ reddit = praw.Reddit(client_id=CLIENT_ID,
 
 def good_pic(submission):
     """
-    Returns True if the picture is larger than the minimum width and height 
+    Returns True if the picture is larger than the minimum width and height
     and also if the width is larger than the height
     """
     if not 'preview' in vars(submission):
@@ -71,11 +72,15 @@ def cleanup(num_days, dest_dir):
                     try:
                         shutil.move(full_path, TRASH_PATH)
                         logging.info(f"Moved {file} to trash")
-                    except Exception as _:
+                    except Exception as e:
                         logging.info(f"Unable to delete {file}")
 
 logging.info("Launched script")
 
 if __name__ == "__main__":
-    get_top_pics(SUBREDDIT)
-    cleanup(CLEANUP_DAYS, DEST_DIR)
+    try:
+        get_top_pics(SUBREDDIT)
+        cleanup(CLEANUP_DAYS, DEST_DIR)
+    except NewConnectionError:
+        logging.info("Unable to establish connection - couldn't download image")
+
