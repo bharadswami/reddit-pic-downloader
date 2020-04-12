@@ -3,3 +3,4 @@ required_info.py
 errors.txt
 log.txt
 output.txt
+__pycache__/*
