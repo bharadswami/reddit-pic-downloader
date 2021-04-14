@@ -1,3 +1,4 @@
+#!/usr/bin/env /Users/bharadwaj/opt/anaconda3/envs/wallpaper/bin/python3
 import shutil
 import time
 from datetime import datetime
@@ -9,8 +10,7 @@ from urllib3.exceptions import NewConnectionError
 from required_info import *
 
 logging.basicConfig(filename=LOG_FILE_NAME,
-                    level=logging.INFO,
-                    format='%(asctime)s - %(message)s')
+                    level=logging.INFO, format='%(asctime)s - %(message)s')
 logging.getLogger('requests').setLevel(logging.DEBUG)
 
 reddit = praw.Reddit(client_id=CLIENT_ID,
@@ -56,8 +56,7 @@ def download_image(subreddit, url):
     Downloads an image from the given URL
     """
     resp = requests.get(url, stream=True)
-    filename = DEST_DIR + subreddit + datetime.now().strftime(
-        "%Y%m%dT%H%M%S.%f") + ".jpg"
+    filename = DEST_DIR + subreddit + datetime.now().strftime("%Y%m%dT%H%M%S.%f") + ".jpg"
     with open(filename, 'wb+') as file:
         resp.raw.decode_content = True
         shutil.copyfileobj(resp.raw, file)
@@ -68,19 +67,18 @@ def cleanup(num_days, dest_dir):
     Moves files in given directory to the Trash that are older than NUM_DAYS days
     """
     threshold = time.time() - (num_days * 24 * 60 * 60)
-    for _, _, files in os.walk(
-            dest_dir,
-            topdown=False):  # os.walk returns root, directories, files
+    for _, _, files in os.walk(dest_dir, topdown=False):  # os.walk returns root, directories, files
         for file in files:
-            full_path = os.path.join(dest_dir, file)
-            file_age = os.stat(full_path).st_mtime
+            if file != ".DS_Store":  # To prevent cluttering trash with all     the .DS_    Store files
+                full_path = os.path.join(dest_dir, file)
+                file_age = os.stat(full_path).st_mtime
 
-            if file_age < threshold:
-                try:
-                    shutil.move(full_path, TRASH_PATH)
-                    logging.info(f"Moved {file} to trash")
-                except Exception as e:
-                    logging.info(f"Unable to delete {file}\n {e}")
+                if file_age < threshold:
+                    try:
+                        shutil.move(full_path, TRASH_PATH)
+                        logging.info(f"Moved {file} to trash")
+                    except Exception as e:
+                        logging.info(f"Unable to delete {file}\n {e}")
 
 
 if __name__ == "__main__":
@@ -89,7 +87,7 @@ if __name__ == "__main__":
         get_top_pics(SUBREDDIT)
         cleanup(CLEANUP_DAYS, DEST_DIR)
     except NewConnectionError:
-        logging.info(
-            "Unable to establish connection - couldn't download image")
+        logging.info("Unable to establish connection - couldn't download image")
     except Exception as e:
         logging.info(e)
+
