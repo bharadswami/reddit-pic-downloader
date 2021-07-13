@@ -1,4 +1,4 @@
-#!/usr/bin/env /Users/bharadwaj/opt/anaconda3/envs/wallpaper/bin/python3
+#! /usr/local/bin/python3
 import shutil
 import time
 from datetime import datetime
