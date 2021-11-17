@@ -4,3 +4,4 @@ errors.txt
 log.txt
 output.txt
 __pycache__/*
+.ipynb_checkpoints
