@@ -23,7 +23,8 @@ def good_pic(submission):
     Returns True if the picture is larger than the minimum width and height
     and also if the width is larger than the height
     """
-    if not 'preview' in vars(submission):
+#     if not 'preview' in vars(submission) or submission.is_video:
+    if submission.domain != 'i.redd.it':
         return False
     MIN_WIDTH = 0
     MIN_HEIGHT = 0
@@ -39,7 +40,7 @@ def get_top_pics(sub):
     if sub[:2] == "r/":
         sub = sub[2:]
     top_day = reddit.subreddit(sub).top('day')
-    pics_per_day = 2
+    pics_per_day = 5
     num_downloaded = 0
     for submission in top_day:
         if good_pic(submission):
